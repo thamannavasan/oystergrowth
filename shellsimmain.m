@@ -18,7 +18,8 @@
 % matter(exogenous) OA: Ocean acidification (exogenous)
 % 
 %                         *Internal Switches*
-% OA: Ocean Acidification SPAWN: weather we all spawning to happen
+% options.OA: Ocean Acidification mechanism on or off
+% options.SPAWN: triploid or diploid setting
 %
 %                         *Other notes*
 % The step size in this simulator is a single day. The mesh.horizon
@@ -38,18 +39,18 @@ clear all; close all; clc;
 
 % location = 'D:\Users\klingd\Dropbox';
 location = 'C:\Users\vasant\Dropbox\';
+% location = 'C:\Users\vasant\Dropbox\';
 
 
 % BEGIN SIMULATION Call the file that has the exogenous variables. The
 % first column should include the exogenous time series data for TEMP, the
 % second for CHL, third for POM, and the fourth for POC. 
 
-% if strcmp(location,'C:\Users\vasant\Dropbox\')
+if strcmp(location,'C:\Users\vasant\Dropbox\')
 EXOGENOUS = textread(strcat(location,'\oashellfisheconm\timeseries data\exogenoustime.txt'),'','delimiter',' ');
-% else
-	% EXOGENOUS = textread(strcat(location,'\oashellfisheconm\timeseries
-	% data\exogenoustime.txt'),'','delimiter',' ');
-% end
+ else
+	EXOGENOUS = textread(strcat(location,'\exogenoustime.txt'),'','delimiter',' ');
+ end
 
 TEMP = EXOGENOUS(:,1); 
 CHL = EXOGENOUS(:,2);
@@ -105,7 +106,7 @@ p.MHL_c = 24;
 %etc. does george have data for this?) ws (sw sometimes) is the standard
 %weight (1g;
 %https://pdfs.semanticscholar.org/60a8/95b39f9458fe493948940a7d283612cbc14d.pdf)
-p.WS = 1 ; %this is definitely just 1
+p.WS = 1 ; %this is listed as 1g in the paper, not sure if we need to change this
 p.WE = .25; % We need experimental data here 
 
 
@@ -190,10 +191,7 @@ SE(j)= SEnext;
 TISE(j) = TISEnext;
 DSW(j) = DSWnext;
 DSTW(j) = DSTWnext;
-SE(1)= 0.0056; 
-DSW(1) = 0.035;
-TISE(1) = 0.0786;
-DSTW (1)= 0.005;
+
 
 % Calling the transition function. In doing this we will populate a vector
 % for each state variable and we will have the final x(j+1) step value. 
