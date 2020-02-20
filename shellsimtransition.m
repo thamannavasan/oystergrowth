@@ -134,7 +134,9 @@ SLM = p.SLM;
 TTS = p.TTS;
 PSTL = p.PSTL;
 
- 
+%Here are the options for OA and spawning. Turn options.SPAWN = 0 if triploid, options.OA = 1 when we want to add OA effects to the model
+options.SPAWN = 1;
+options.OA = 0;
 
 % the following functions make use of the exogenous variable at time step
 % j. The model then runs through a process where the energy is processed by
@@ -202,18 +204,32 @@ PSTL = p.PSTL;
 		TG = NEB;
     elseif (COND>=MTA)
 		TG = MTA.*NEB;
-        else
+	else
         TG = 0;
     end
     
 	SL = a*DSW.^b;
     
-if (SL>=SLM & TEMP >= TTS & COND>=0.95*MTA)
- 		SPAWN = 23.5*PSTL*DSTW;
- 	else
- 		SPAWN = 0;
-end
-    
+
+	if (SL>=SLM & TEMP >= TTS & COND>=0.95*MTA)
+		if (options.SPAWN == 1)
+			SPAWN = 23.5*PSTL*DSTW;
+		else
+			SPAWN = 0;
+		end
+	end
+
+
+%	if 
+%		if (options.OA ==1)
+%		else
+%			OA = 0;
+%		end
+%	end
+
+
+
+ 
 % at the end, the resulting ending value of each state variable is a
 % function of the state variable in the previous step and total growth (TG)
 	SEnext = SE + SG;
